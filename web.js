@@ -4,15 +4,12 @@ var express = require('express')
 
 var app = express.createServer();
 
-// TODO, remove colon and subdivs, ex price div
-// TODO, figure out why its called twice. 
-// Return object
 var getDishes = function(window, restaurantId) {
   var dishes = [];
   window.$('#' + restaurantId + ' li').each(function() {
       var $li = window.$(this)
         , title = $li.find('span.title')[0].innerHTML
-        , desc = $li.find('span.desc')[0].innerHTML;
+        , desc = $li.find('span.desc')[0].innerHTML.replace(/@\d+$/, '');
 
       dishes.push({
         title: title
@@ -23,7 +20,7 @@ var getDishes = function(window, restaurantId) {
 };
 
 app.get('/:place', function(request, response) {
-
+  console.log('Request');
   var data = '';
   http.get('http://chalmerskonferens.se/dagens-menyer/johanneberg/', function(res) {
     res.setEncoding('utf8');
@@ -31,22 +28,28 @@ app.get('/:place', function(request, response) {
       data += chunk;
     });
     res.on('end', function() {
-      console.log('Called twice?');
       jsdom.env(data, ['http://code.jquery.com/jquery.js'], function(errors, window) {
         var unionRestaurant = getDishes(window, 'K')
           , linsen = getDishes(window, 'L');
 
-        response.send(unionRestaurant);
+        var restaurants = {
+          karen: {
+             title: 'Kårrestaurangen'
+           , dishes: unionRestaurant
+          } 
+        , linsen: {
+             title: 'Linsen'
+           , dishes: linsen
+          }
+        };
+
+        response.send(restaurants);
       });
     });
-
 
   }).on('error', function(e) {
     console.log("Got error: " + e.message);
   });
-
-  // get the webpage, http request and such
-
 });
 
 var port = process.env.PORT || 5000;
