@@ -2,38 +2,38 @@ var express = require('express')
   , restaurants = require('./restaurants')
   , request = require('request')
   , FeedParser = require('feedparser')
+  , async = require('async')
   , app = express()
   ;
 
 
-app.get('/:place', function(req, res) {
-  var restaurant
+app.get('/lunch', function(req, res) {
+  var cbFinished = 0
+    , restaurantKey
+    , restaurant
     ;
 
-  for (restaurant in restaurants) {
-    restaurant.hej = 'Bujkas';
-    console.log('restaurant', restaurant);
+  for (restaurantKey in restaurants) {
+    restaurant = restaurants[ restaurantKey ];
+
+    getDishes(restaurant, function(err, restaurant) {
+      if ( err ) console.error( err );
+
+      cbFinished++;
+
+      if (cbFinished === Object.keys( restaurants ).length ) {
+        res.send( restaurants );
+      }
+
+    });
   }
-  console.log('Restaurants', restaurants);
-  // restaurants.forEach(function(restaurant) {
-  //   restaurantObj[ restaurant.title ] = restaurant.title;
-  // });
-
-
-  // console.log('Restaurants', restaurantObj);
-  // getDishes( karrestaurang, function(err, dishes) {
-  //   if (err) {
-  //     console.error(err);
-  //   }
-  //   console.log('Dishes', dishes);
-  // });
-
 });
 
-function getDishes(url, cb) {
-  var dishes = [];
+function getDishes(restaurant, cb) {
+  var dishes = []
+    ;
 
-  request( url ).pipe( new FeedParser() )
+  request( restaurant.url ).pipe( new FeedParser() )
       .on('error', function(err) {
         cb(err);
       })
@@ -50,7 +50,8 @@ function getDishes(url, cb) {
         }
       })
       .on('end', function() {
-        cb(null, dishes);
+        restaurant.dishes = dishes;
+        cb(null, restaurant);
       });
 }
 
