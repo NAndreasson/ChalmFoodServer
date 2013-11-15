@@ -2,7 +2,6 @@ var express = require('express')
   , restaurants = require('./restaurants')
   , request = require('request')
   , FeedParser = require('feedparser')
-  , async = require('async')
   , app = express()
   ;
 
