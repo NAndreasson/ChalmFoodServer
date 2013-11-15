@@ -1,28 +1,32 @@
 var express = require('express')
+  , restaurants = require('./restaurants')
   , request = require('request')
   , FeedParser = require('feedparser')
   , app = express()
   ;
 
-var karrestaurang = 'http://cm.lskitchen.se/lskitchen/rss/sv/4'
-  , linsen = 'http://cm.lskitchen.se/lskitchen/rss/sv/7'
-  ;
 
 app.get('/:place', function(req, res) {
-  var restaurants = {
-    karen: {
-      title: 'Kårrestaurangen',
-    },
-    linsen: {
-      title: 'Linsen',
-    }
-  };
+  var restaurant
+    ;
 
-  getDishes( karrestaurang, function(err, dishes) {
-    if (err) {
-      console.error(err);
-    }
-  });
+  for (restaurant in restaurants) {
+    restaurant.hej = 'Bujkas';
+    console.log('restaurant', restaurant);
+  }
+  console.log('Restaurants', restaurants);
+  // restaurants.forEach(function(restaurant) {
+  //   restaurantObj[ restaurant.title ] = restaurant.title;
+  // });
+
+
+  // console.log('Restaurants', restaurantObj);
+  // getDishes( karrestaurang, function(err, dishes) {
+  //   if (err) {
+  //     console.error(err);
+  //   }
+  //   console.log('Dishes', dishes);
+  // });
 
 });
 
