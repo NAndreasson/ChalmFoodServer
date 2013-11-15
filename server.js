@@ -8,7 +8,8 @@ var express = require('express')
 
 
 app.get('/lunch', function(req, res) {
-  var cbFinished = 0
+  var nrRestaurants = Object.keys( restaurants ).length
+    , cbFinished = 0
     , restaurantKey
     , restaurant
     ;
@@ -21,7 +22,7 @@ app.get('/lunch', function(req, res) {
 
       cbFinished++;
 
-      if (cbFinished === Object.keys( restaurants ).length ) {
+      if (cbFinished === nrRestaurants ) {
         res.send( restaurants );
       }
 
