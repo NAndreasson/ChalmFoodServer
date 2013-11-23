@@ -6,15 +6,17 @@ var express = require('express')
   ;
 
 
-app.get('/lunch', function(req, res) {
-  var nrRestaurants = Object.keys( restaurants ).length
+app.get('/:campus', function(req, res) {
+  var campus = req.params.campus
+    , campusRestaurants = restaurants[ campus ]
+    , nrRestaurants = Object.keys( campusRestaurants ).length
     , cbFinished = 0
     , restaurantKey
     , restaurant
     ;
 
-  for (restaurantKey in restaurants) {
-    restaurant = restaurants[ restaurantKey ];
+  for (restaurantKey in campusRestaurants) {
+    restaurant = campusRestaurants[ restaurantKey ];
 
     getDishes(restaurant, function(err, restaurant) {
       if ( err ) console.error( err );
@@ -22,7 +24,7 @@ app.get('/lunch', function(req, res) {
       cbFinished++;
 
       if (cbFinished === nrRestaurants ) {
-        res.send( restaurants );
+        res.send( campusRestaurants );
       }
 
     });
