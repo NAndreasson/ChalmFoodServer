@@ -2,40 +2,35 @@ var express = require('express')
   , restaurants = require('./restaurants')
   , request = require('request')
   , FeedParser = require('feedparser')
+  , async = require('async')
+  , moment = require('moment')
   , app = express()
   ;
 
 
 app.get('/:campus', function(req, res) {
-  var campus = req.params.campus
-    , campusRestaurants = restaurants[ campus ]
-    , nrRestaurants = Object.keys( campusRestaurants ).length
-    , cbFinished = 0
-    , restaurantKey
-    , restaurant
-    ;
+  // which campus?
+  var campus = req.params.campus;
 
-  for (restaurantKey in campusRestaurants) {
-    restaurant = campusRestaurants[ restaurantKey ];
+  // TODO error handling, what if the restaurant dont exist
+  var campusRestaurants = restaurants[ campus ];
 
-    getDishes(restaurant, function(err, restaurant) {
-      if ( err ) console.error( err );
+  // get dishes for restaurants at campus
+  async.map(campusRestaurants, getDishes, function(err, results) {
+    if (err) {
+      return;
+    }
 
-      cbFinished++;
-
-      if (cbFinished === nrRestaurants ) {
-        res.send( campusRestaurants );
-      }
-
-    });
-  }
+    res.send( results );
+  });
 });
 
 function getDishes(restaurant, cb) {
-  var dishes = []
+  var restaurantFeedUrl = buildFeedUrl( restaurant.url )
+    , dishes = []
     ;
 
-  request( restaurant.url ).pipe( new FeedParser() )
+  request( restaurantFeedUrl ).pipe( new FeedParser() )
       .on('error', function(err) {
         cb(err);
       })
@@ -56,6 +51,13 @@ function getDishes(restaurant, cb) {
         cb(null, restaurant);
       });
 }
+
+function buildFeedUrl(baseUrl) {
+  var todaysDate = moment().format('YYYY-MM-DD');
+
+  return baseUrl + todaysDate + '.rss';
+}
+
 
 var port = process.env.PORT || 5000;
 app.listen(port, function() {

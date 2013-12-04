@@ -1,22 +1,22 @@
 {
-  "johanneberg": {
-    "karen": {
+  "johanneberg": [
+    {
       "title": "Kårrestaurang",
-      "url": "http://cm.lskitchen.se/lskitchen/rss/sv/4"
+      "url": "http://cm.lskitchen.se/johanneberg/karrestaurangen/sv/"
     },
-    "linsen": {
+    {
       "title": "Linsen",
-      "url": "http://cm.lskitchen.se/lskitchen/rss/sv/7"
+      "url": "http://cm.lskitchen.se/johanneberg/linsen/sv/"
     }
-  },
-  "lindholmen": {
-    "lskitchen": {
+  ],
+  "lindholmen": [
+    {
       "title": "L's kitchen",
-      "url": "http://cm.lskitchen.se/lskitchen/rss/sv"
+      "url": "http://cm.lskitchen.se/lindholmen/foodcourt/sv/"
     },
-    "restaurangr": {
+    {
       "title": "Restaurang R",
-      "url": "http://cm.lskitchen.se/lskitchen/rss/sv/2"
+      "url": "http://cm.lskitchen.se/lindholmen/restaurang/sv/"
     }
-  }
+  ]
 }
