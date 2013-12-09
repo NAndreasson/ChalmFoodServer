@@ -3,9 +3,9 @@ var request = require('request')
   , moment = require('moment')
   ;
 
-exports.getDishes = getDishes;
+exports.getRestaurantDishes = getRestaurantDishes;
 
-function getDishes(restaurant, cb) {
+function getRestaurantDishes(restaurant, cb) {
   var restaurantFeedUrl = buildFeedUrl( restaurant.url )
     , dishes = []
     ;
