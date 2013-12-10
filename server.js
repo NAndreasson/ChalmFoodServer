@@ -1,8 +1,6 @@
 var express = require('express')
-  , redis = require('redis')
-  , redisDb = redis.createClient()
   , restaurants = require('./restaurants')
-  , dishRetriever = require('./dishRetriever')
+  , dishRetriever = require('./dishRetrieverRedis')
   , async = require('async')
   , app = express()
   ;
@@ -17,24 +15,14 @@ app.get('/:campus', function(req, res) {
     return;
   }
 
-  redisDb.get(campus, function(err, result) {
-    if ( err || !result ) {
-      // get dishes for restaurants at campus
-      async.map(campusRestaurants, dishRetriever.getRestaurantDishes, handleResults);
+  dishRetriever.getCampusDishes(campus, function(err, results) {
+    if (err) {
+      res.send( 503 ); // service unavailable, maybe not the best one aye?
       return;
     }
 
-    res.send( JSON.parse( result ) );
-  });
-
-  function handleResults(err, results) {
-    if (err) return;
-
-    // cache the result for an hour
-    redisDb.setex(campus, 3600, JSON.stringify( results ));
-
     res.send( results );
-  };
+  });
 
 });
 
