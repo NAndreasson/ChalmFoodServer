@@ -2,6 +2,9 @@
   "name": "chalm-food-server",
   "version": "0.0.2",
   "private": true,
+  "scripts": {
+    "start": "node server.js"
+  },
   "dependencies": {
     "express": "3.x",
     "request": "2.27.0",
