@@ -1,7 +1,10 @@
+var redisHost  = process.env.REDIS_1_PORT_6379_TCP_ADDR || '127.0.0.1';
+var redisPort  = process.env.REDIS_1_PORT_6379_TCP_PORT || 6379;
+
 var dishRetriever = require('./dishRetriever')
   , restaurants = require('./restaurants')
   , redis = require('redis')
-  , redisDb = redis.createClient()
+  , redisDb = redis.createClient(redisPort, redisHost)
   , async = require('async')
   ;
 
